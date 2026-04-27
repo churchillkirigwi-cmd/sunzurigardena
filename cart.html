@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart - Sunzuri</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0b0b0c;
+  --card:#121214;
+  --accent:#ffb703;
+  --accent2:#fb8500;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins}
+body{
+  background:var(--bg);
+  color:#fff;padding:30px
+}
+
+h1{
+  color:var(--accent);
+  margin-bottom:20px
+}
+
+/* CART ITEM */
+.item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:var(--card);
+  padding:15px;
+  border-radius:14px;
+  margin-bottom:15px;
+  transition:0.2s;
+}
+
+.item:hover{
+  transform:scale(1.01);
+}
+
+.controls button{
+  padding:6px 12px;
+  margin:0 5px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  font-weight:600;
+}
+
+/* TOTAL */
+.total{
+  margin-top:20px;
+  font-size:22px;
+  font-weight:700;
+  color:var(--accent);
+}
+
+/* BUTTONS */
+.btn{
+  margin-top:20px;
+  padding:12px;
+  width:100%;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* CLEAR BUTTON */
+.clear{
+  background:#333;
+  color:#fff;
+  margin-top:10px;
+}
+
+/* EMPTY STATE */
+.empty{
+  text-align:center;
+  padding:50px;
+  color:#aaa;
+}
+
+.empty span{
+  font-size:50px;
+  display:block;
+  margin-bottom:10px;
+}
+
+/* =========================
+   GLOBAL MOBILE FIX SYSTEM
+========================= */
+
+img{
+  max-width:100%;
+  height:auto;
+  display:block;
+}
+
+/* Prevent overflow */
+body{
+  overflow-x:hidden;
+}
+
+/* RESPONSIVE GRID FIX */
+.grid{
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  padding: 20px;
+  gap: 15px !important;
+}
+
+/* HEADER FIX */
+header{
+  flex-wrap:wrap;
+  gap:10px;
+  padding:15px !important;
+}
+
+/* HERO FIX */
+.hero{
+  flex-direction:column !important;
+  text-align:center;
+  padding:30px !important;
+}
+
+/* BUTTONS MOBILE */
+button{
+  font-size:14px;
+}
+
+/* CARDS MOBILE */
+.card, .menu-item{
+  padding:10px !important;
+}
+
+/* TEXT SCALING */
+h1{font-size:24px}
+h2{font-size:20px}
+h3{font-size:18px}
+
+/* CART / FORMS MOBILE */
+input, select{
+  width:100%;
+  font-size:14px;
+}
+
+/* SMALL SCREENS */
+@media(max-width:480px){
+
+  header nav{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:8px;
+  }
+
+  .hero img{
+    width:100% !important;
+    max-width:280px;
+  }
+
+  .btn{
+    width:100%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<h1>Your Cart 🛒</h1>
+
+<div id="cart-items"></div>
+
+<div class="total" id="total">Total: KES 0</div>
+
+<a href="checkout.html">
+  <button class="btn">Proceed to Checkout</button>
+</a>
+
+<button class="btn clear" onclick="clearCart()">Clear Cart</button>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+<script src="firebase.js"></script>
+
+<script>
+/* =========================
+   FIREBASE CORE
+========================= */
+function getUser(){
+  return firebase.auth().currentUser;
+}
+
+function getUserId(){
+  return firebase.auth().currentUser?.uid;
+}
+
+/* =========================
+   AUTH GUARD
+========================= */
+firebase.auth().onAuthStateChanged(user => {
+  if(!user){
+    alert("Please login first");
+    window.location.href = "login.html";
+    return;
+  }
+
+  renderCart(); // load cart after auth is ready
+});
+
+/* =========================
+   LOAD CART (FIREBASE)
+========================= */
+async function getCart(){
+
+  const userId = getUserId();
+  if(!userId) return [];
+
+  const snapshot = await firebase.firestore()
+    .collection("users")
+    .doc(userId)
+    .collection("cart")
+    .get();
+
+  let cart = [];
+
+  snapshot.forEach(doc=>{
+    cart.push(doc.data());
+  });
+
+  return cart;
+}
+
+/* =========================
+   RENDER CART (UNCHANGED UI LOGIC)
+========================= */
+async function renderCart(){
+
+  const container = document.getElementById('cart-items');
+  const totalEl = document.getElementById('total');
+
+  let cart = await getCart();
+
+  container.innerHTML = '';
+
+  if(cart.length === 0){
+    container.innerHTML = `
+      <div class="empty">
+        🛒 Your cart is empty
+      </div>
+    `;
+    totalEl.innerText = "Total: KES 0";
+    return;
+  }
+
+  let total = 0;
+
+  cart.forEach((item,index)=>{
+    total += item.price * item.qty;
+
+    container.innerHTML += `
+      <div class="item">
+        <div>
+          <strong>${item.name}</strong><br>
+          KES ${item.price} × ${item.qty}
+        </div>
+
+        <div class="controls">
+          <button onclick="changeQty('${item.name}',1)">+</button>
+          <button onclick="changeQty('${item.name}',-1)">-</button>
+        </div>
+      </div>
+    `;
+  });
+
+  totalEl.innerText = "Total: KES " + total;
+}
+
+/* =========================
+   CHANGE QUANTITY (FIREBASE)
+========================= */
+async function changeQty(name, delta){
+
+  const userId = getUserId();
+  if(!userId) return;
+
+  const ref = firebase.firestore()
+    .collection("users")
+    .doc(userId)
+    .collection("cart")
+    .doc(name);
+
+  const doc = await ref.get();
+
+  if(!doc.exists) return;
+
+  let qty = doc.data().qty + delta;
+
+  if(qty <= 0){
+    await ref.delete();
+  } else {
+    await ref.update({ qty });
+  }
+
+  renderCart();
+}
+
+/* =========================
+   CLEAR CART (FIREBASE)
+========================= */
+async function clearCart(){
+
+  const userId = getUserId();
+  if(!userId) return;
+
+  const snapshot = await firebase.firestore()
+    .collection("users")
+    .doc(userId)
+    .collection("cart")
+    .get();
+
+  snapshot.forEach(doc=>{
+    doc.ref.delete();
+  });
+
+  renderCart();
+}
+</script>
+
+</body>
+</html>

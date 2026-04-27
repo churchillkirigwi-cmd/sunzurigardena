@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sunzuri Gardena</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0b0c;
+  --card:#121214;
+  --muted:#9aa0a6;
+  --accent:#ffb703;
+  --accent-2:#fb8500;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{background:var(--bg);color:#fff}
+
+header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 60px;background:rgba(0,0,0,0.6);
+  position:sticky;top:0;border-bottom:1px solid #1f1f22;
+}
+
+nav a{margin:0 15px;color:#ddd;text-decoration:none}
+nav a:hover{color:var(--accent)}
+
+.btn{
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  padding:10px 18px;border:none;border-radius:10px;cursor:pointer
+}
+
+.hero{display:flex;justify-content:space-between;padding:60px}
+.hero img{width:400px;border-radius:20px}
+
+.features{display:flex;justify-content:space-around;margin:40px 60px;background:var(--card);padding:20px;border-radius:15px}
+
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:40px}
+
+.card{background:var(--card);padding:15px;border-radius:15px;text-align:center}
+.card img{width:100%;height:140px;object-fit:cover;border-radius:10px}
+
+.menu-item{background:var(--card);padding:15px;border-radius:15px}
+.menu-item img{width:100%;height:140px;object-fit:cover;border-radius:10px}
+
+.cart-icon{position:relative;cursor:pointer}
+.cart-count{position:absolute;top:-8px;right:-8px;background:red;color:#fff;border-radius:50%;padding:4px 8px;font-size:12px}
+
+.fly{position:fixed;width:40px;height:40px;border-radius:50%;pointer-events:none;z-index:9999;transition:all 0.7s ease}
+
+
+@media(max-width:900px){
+
+  header{
+    flex-direction:column;
+    gap:10px;
+    padding:15px;
+  }
+
+  nav{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+
+  .hero{
+    flex-direction:column;
+    text-align:center;
+    padding:30px;
+  }
+
+  .hero img{
+    width:100%;
+    max-width:300px;
+  }
+
+  .features{
+    flex-direction:column;
+    gap:15px;
+  }
+
+  .grid{
+    grid-template-columns:repeat(2,1fr) !important;
+    padding:20px;
+  }
+
+  .menu-item, .card{
+    padding:10px;
+  }
+}
+
+#auth-area span{
+  font-size:22px;
+  margin:0 8px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+#auth-area span:hover{
+  transform:scale(1.2);
+}
+
+.profile-wrapper{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* PROFILE */
+.profile-wrapper{
+  position:relative;
+}
+
+.profile-trigger{
+  text-align:center;
+  cursor:pointer;
+}
+
+.avatar{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.username{
+  font-size:12px;
+  color:#aaa;
+}
+
+/* DROPDOWN */
+.dropdown{
+  position:absolute;
+  top:60px;
+  right:0;
+  background:#121214;
+  padding:12px;
+  border-radius:10px;
+  width:200px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.6);
+
+  opacity:0;
+  transform:translateY(-10px);
+  visibility:hidden;
+  transition:0.25s ease;
+}
+
+.dropdown.show{
+  opacity:1;
+  transform:translateY(0);
+  visibility:visible;
+}
+
+/* LINKS */
+.dropdown a,
+.dropdown .logout,
+.dropdown .upload{
+  display:block;
+  padding:8px;
+  color:#fff;
+  text-decoration:none;
+  cursor:pointer;
+}
+
+.dropdown a:hover,
+.dropdown .logout:hover{
+  background:#1f1f22;
+  border-radius:6px;
+}
+
+/* UPLOAD */
+.upload input{
+  display:none;
+}
+
+/* BADGE */
+.badge{
+  background:red;
+  color:#fff;
+  border-radius:50%;
+  padding:2px 6px;
+  font-size:10px;
+  margin-left:6px;
+}
+
+.logout{
+  margin-top:5px;
+  padding:8px;
+  cursor:pointer;
+  color:#ff4d4d;
+  font-weight:600;
+}
+
+.logout:hover{
+  background:#1f1f22;
+  border-radius:6px;
+}
+
+/* =========================
+   PREMIUM UI UPGRADE
+========================= */
+
+/* BACKGROUND GLOW */
+body::before{
+  content:"";
+  position:fixed;
+  width:600px;
+  height:600px;
+  background:radial-gradient(circle, rgba(255,183,3,0.12), transparent);
+  top:-150px;
+  left:-150px;
+  z-index:-1;
+}
+
+/* HEADER GLASS */
+header{
+  backdrop-filter:blur(10px);
+  box-shadow:0 5px 20px rgba(0,0,0,0.4);
+}
+
+/* NAV HOVER */
+nav a{
+  position:relative;
+}
+nav a::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-5px;
+  width:0;
+  height:2px;
+  background:var(--accent);
+  transition:0.3s;
+}
+nav a:hover::after{
+  width:100%;
+}
+
+/* HERO */
+.hero{
+  align-items:center;
+  animation:fadeUp 1s ease;
+}
+
+.hero h1{
+  font-size:52px;
+  margin-bottom:10px;
+}
+
+.hero img{
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+  transition:0.4s;
+}
+.hero img:hover{
+  transform:scale(1.05) rotate(1deg);
+}
+
+/* BUTTON */
+.btn{
+  transition:0.3s;
+}
+.btn:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(255,183,3,0.4);
+}
+
+/* FEATURES */
+.features{
+  backdrop-filter:blur(8px);
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+.features div{
+  transition:0.3s;
+}
+.features div:hover{
+  transform:translateY(-5px);
+  color:var(--accent);
+}
+
+/* CARDS */
+.card{
+  transition:0.3s;
+  position:relative;
+  overflow:hidden;
+}
+.card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 20px 50px rgba(0,0,0,0.6);
+}
+
+/* CARD IMAGE ZOOM */
+.card img{
+  transition:0.4s;
+}
+.card:hover img{
+  transform:scale(1.1);
+}
+
+/* MENU ITEMS */
+.menu-item{
+  transition:0.3s;
+  position:relative;
+  overflow:hidden;
+}
+.menu-item:hover{
+  transform:translateY(-8px);
+  box-shadow:0 20px 50px rgba(0,0,0,0.6);
+}
+
+/* MENU IMAGE ZOOM */
+.menu-item img{
+  transition:0.4s;
+}
+.menu-item:hover img{
+  transform:scale(1.08);
+}
+
+/* ADD BUTTON */
+.menu-item button{
+  width:100%;
+  margin-top:10px;
+  border:none;
+  padding:10px;
+  border-radius:8px;
+  background:linear-gradient(135deg,#ffb703,#fb8500);
+  cursor:pointer;
+  transition:0.3s;
+}
+.menu-item button:hover{
+  transform:scale(1.05);
+}
+
+/* CART BADGE POP */
+.cart-count{
+  animation:bounce 0.6s;
+}
+
+/* FOOTER */
+footer{
+  border-top:1px solid #1f1f22;
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(30px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes bounce{
+  0%{transform:scale(0.5)}
+  50%{transform:scale(1.3)}
+  100%{transform:scale(1)}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h2 style="color:var(--accent)">Sunzuri Gardena</h2>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="menu.html">Menu</a>
+    <a href="events.html">Events</a>
+    <a href="contact.html">Contact</a>
+    <a href="tracking.html">Order Tracking</a>
+  </nav>
+ <div id="auth-area" style="position:relative;"></div>
+  <div class="cart-icon" onclick="goToCart()">
+    🛒
+    <span id="cart-count" class="cart-count">0</span>
+  </div>
+</header>
+
+<section class="hero">
+  <div>
+    <h1 style="font-size:40px">Taste the Fiesta</h1>
+    <p style="color:var(--muted)">Delicious food, fast delivery & unforgettable experience.</p>
+    <button onclick="window.location.href='menu.html'" class="btn">Order Now</button>
+  </div>
+  <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=400&q=80&auto=format" loading="lazy">
+</section>
+
+<div class="features">
+  <div><strong>Fast Delivery</strong><br>On time</div>
+  <div><strong>Best Quality</strong><br>Fresh</div>
+  <div><strong>Easy Ordering</strong><br>Simple</div>
+</div>
+
+<section>
+<h3 style="padding-left:40px">Popular Categories</h3>
+<div class="grid">
+  <div class="card"><img src="images/mutura.jpg" loading="lazy"><p>Mutura</p></div>
+  <div class="card"><img src="images/signature breakfast.jpg" loading="lazy"><p>Signature Breakfast</p></div>
+  <div class="card"><img src="images/feast for 4.jpg" loading="lazy"><p>Sunzuri feast (for 4)</p></div>
+  <div class="card"><img src="images/matumbo ugali.jpg" loading="lazy"><p>matumbo+ugali</p></div>
+</div>
+</section>
+
+<section>
+<h3 style="padding-left:40px">Top Picks</h3>
+<div class="grid">
+
+<div class="menu-item">
+  <img src="images/chips masala.jpg" loading="lazy">
+  <h4>Chips Masala</h4>
+  <p>KES 1</p>
+  <button onclick="addToCart(event,'Chips Masala',1)">Add</button>
+</div>
+
+<div class="menu-item">
+  <img src="images/beef choma.jpg" loading="lazy">
+  <h4>Beef Choma</h4>
+  <p>KES 500</p>
+  <button onclick="addToCart(event,'Beef Choma',500)">Add</button>
+</div>
+
+<div class="menu-item">
+  <img src="images/githeri.jpg" loading="lazy">
+  <h4>Githeri</h4>
+  <p>KES 100</p>
+  <button onclick="addToCart(event,'Githeri',100)">Add</button>
+</div>
+
+<div class="menu-item">
+  <img src="images/african tea.jpg" loading="lazy">
+  <h4>African Tea</h4>
+  <p>KES 50</p>
+  <button onclick="addToCart(event,'African Tea',50)">Add</button>
+</div>
+
+</div>
+</section>
+
+<footer style="text-align:center;padding:30px;color:#777">
+© 2026 Sunzuri Gardena. All rights reserved.
+</footer>
+
+
+<!-- FIREBASE CORE -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+<!-- AUTH -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+<!-- FIRESTORE (if used anywhere) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyA6o6lgDHFRg_gQkio9HIpcnU25DB2Ctu8",
+  authDomain: "sunzurirestaurant.firebaseapp.com",
+  projectId: "sunzurirestaurant",
+  storageBucket: "sunzurirestaurant.appspot.com",
+  messagingSenderId: "1079501361337",
+  appId: "1:1079501361337:web:8385d1c20f8d77ac804b68"
+};
+
+firebase.initializeApp(firebaseConfig);
+</script>
+
+<script>
+
+/* =========================
+   FIREBASE AUTH STATE
+========================= */
+let currentUser = null;
+let authReady = false;
+
+firebase.auth().onAuthStateChanged(user => {
+  currentUser = user;
+  authReady = true;
+
+  renderAuth();
+  updateCount();
+});
+
+/* =========================
+   USER
+========================= */
+function getUser(){
+  return currentUser;
+}
+
+/* =========================
+   CART REFERENCE (FIRESTORE)
+========================= */
+function cartRef(){
+  const user = getUser();
+  if(!user) return null;
+
+  return firebase.firestore()
+    .collection("users")
+    .doc(user.uid)
+    .collection("cart");
+}
+
+/* =========================
+   GET CART
+========================= */
+async function getCart(){
+
+  const ref = cartRef();
+  if(!ref) return [];
+
+  const snap = await ref.get();
+
+  let cart = [];
+  snap.forEach(doc => {
+    cart.push(doc.data());
+  });
+
+  return cart;
+}
+
+/* =========================
+   SAVE CART (FIXED SAFE WRITE)
+========================= */
+async function saveCart(cart){
+
+  const ref = cartRef();
+  if(!ref) return;
+
+  const snap = await ref.get();
+
+  // delete old items
+  const batch = firebase.firestore().batch();
+
+  snap.forEach(doc => {
+    batch.delete(doc.ref);
+  });
+
+  await batch.commit();
+
+  // add new items
+  for(const item of cart){
+    await ref.add(item);
+  }
+}
+
+/* =========================
+   CART COUNT
+========================= */
+async function updateCount(){
+
+  const counter = document.getElementById('cart-count');
+  if(!counter || !currentUser) return;
+
+  const cart = await getCart();
+
+  counter.innerText = cart.reduce((a,b)=>a + (b.qty || 0), 0);
+}
+
+/* =========================
+   NAV CART
+========================= */
+function goToCart(){
+  window.location.href = "cart.html";
+}
+
+/* =========================
+   ADD TO CART (FIXED FINAL)
+========================= */
+async function addToCart(e, name, price){
+
+  if(!authReady){
+    alert("Loading... try again");
+    return;
+  }
+
+  const user = getUser();
+
+  if(!user){
+    alert("Please login first");
+    window.location.href = "login.html";
+    return;
+  }
+
+  let cart = await getCart();
+
+  let item = cart.find(i => i.name === name);
+
+  if(item){
+    item.qty += 1;
+  } else {
+    cart.push({name, price, qty:1});
+  }
+
+  await saveCart(cart);
+  await updateCount();
+
+  /* =========================
+     ANIMATION (FIXED PLACEMENT)
+  ========================= */
+  let img = e.target.parentElement.querySelector('img');
+  if(!img) return;
+
+  let clone = img.cloneNode();
+  let rect = img.getBoundingClientRect();
+
+  clone.style.position = 'fixed';
+  clone.style.left = rect.left + 'px';
+  clone.style.top = rect.top + 'px';
+  clone.style.width = '50px';
+  clone.style.height = '50px';
+  clone.style.zIndex = 9999;
+  clone.style.borderRadius = '10px';
+
+  document.body.appendChild(clone);
+
+  setTimeout(()=>{
+    clone.style.left = (window.innerWidth - 60) + 'px';
+    clone.style.top = '20px';
+    clone.style.width = '20px';
+    clone.style.height = '20px';
+    clone.style.opacity = '0.5';
+  },10);
+
+  setTimeout(()=>clone.remove(),700);
+}
+
+/* =========================
+   AUTH UI
+========================= */
+function renderAuth(){
+
+  const authBox = document.getElementById('auth-area');
+  if(!authBox) return;
+
+  const user = getUser();
+
+  if(!user){
+    authBox.innerHTML = `
+      <a href="login.html"><button class="btn">Login</button></a>
+      <a href="signup.html"><button class="btn">Sign Up</button></a>
+    `;
+    return;
+  }
+
+  const email = user.email;
+
+  let avatar = localStorage.getItem(user.uid + '_avatar') 
+    || 'https://via.placeholder.com/40';
+
+  authBox.innerHTML = `
+    <div class="profile-wrapper">
+
+      <div id="profile-trigger" class="profile-trigger">
+        <img src="${avatar}" class="avatar">
+        <div class="username">${email}</div>
+      </div>
+
+      <div id="dropdown" class="dropdown">
+
+        <label class="upload">
+          📷 Change Photo
+          <input type="file" accept="image/*" onchange="uploadAvatar(event)">
+        </label>
+
+        <a href="profile.html">👤 Profile</a>
+
+        <div onclick="logout()" class="logout">🚪 Logout</div>
+
+      </div>
+    </div>
+  `;
+}
+
+/* =========================
+   DROPDOWN
+========================= */
+document.addEventListener("click", function(e){
+
+  const trigger = document.getElementById("profile-trigger");
+  const dropdown = document.getElementById("dropdown");
+
+  if(!trigger || !dropdown) return;
+
+  if(trigger.contains(e.target)){
+    dropdown.classList.toggle("show");
+  } else {
+    dropdown.classList.remove("show");
+  }
+});
+
+/* =========================
+   AVATAR
+========================= */
+function uploadAvatar(e){
+
+  const file = e.target.files[0];
+  const user = getUser();
+
+  if(!file || !user) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(){
+    localStorage.setItem(user.uid + '_avatar', reader.result);
+    renderAuth();
+  };
+
+  reader.readAsDataURL(file);
+}
+
+/* =========================
+   LOGOUT
+========================= */
+function logout(){
+  firebase.auth().signOut().then(() => {
+    console.log("User signed out");
+    
+    // wait for auth to fully update
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 500);
+    
+  }).catch(err => {
+    console.log(err);
+  });
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunzuri Admin</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:Poppins;
+  background:#0b0b0c;
+  color:#fff;
+}
+
+/* LOGIN */
+#loginBox{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
+
+input{
+  padding:12px;
+  margin:10px;
+  border:none;
+  border-radius:8px;
+  width:250px;
+}
+
+button{
+  padding:12px;
+  background:#ffb703;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+/* DASHBOARD */
+#dashboard{
+  display:none;
+}
+
+header{
+  background:#121214;
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.stats{
+  display:flex;
+  gap:20px;
+}
+
+.stat{
+  background:#1a1a1d;
+  padding:10px 15px;
+  border-radius:10px;
+}
+
+.container{
+  padding:20px;
+}
+
+/* ORDER CARD */
+.order{
+  background:#121214;
+  padding:15px;
+  border-radius:12px;
+  margin-bottom:15px;
+  transition:0.3s;
+}
+
+.order:hover{
+  transform:scale(1.01);
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+}
+
+.status{
+  padding:5px 10px;
+  border-radius:8px;
+}
+
+.Pending{background:#ffb703;color:#000;}
+.Preparing{background:orange;}
+.Delivered{background:green;}
+
+.items{
+  margin-top:10px;
+  font-size:13px;
+  color:#aaa;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="loginBox">
+  <h2>Admin Login</h2>
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+
+<header>
+  <h2>🔥 Admin Dashboard</h2>
+
+  <div class="stats">
+    <div class="stat" id="ordersCount">Orders: 0</div>
+    <div class="stat" id="revenue">Revenue: KES 0</div>
+  </div>
+
+  <button onclick="logout()">Logout</button>
+</header>
+
+<div class="container" id="orders"></div>
+
+</div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<script>
+/* ================= FIREBASE ================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyA6o6lgDHFRg_gQkio9HIpcnU25DB2Ctu8",
+  authDomain: "sunzurirestaurant.firebaseapp.com",
+  projectId: "sunzurirestaurant",
+  storageBucket: "sunzurirestaurant.appspot.com",
+  messagingSenderId: "1079501361337",
+  appId: "1:1079501361337:web:8385d1c20f8d77ac804b68"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+/* ================= LOGIN ================= */
+async function login(){
+
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  try {
+
+    const cred = await auth.signInWithEmailAndPassword(email, password);
+
+    const doc = await db.collection("users")
+      .doc(cred.user.uid)
+      .get();
+
+    if(!doc.exists || doc.data().role !== "admin"){
+      alert("❌ Not admin");
+      return;
+    }
+
+    showDashboard();
+
+  } catch(err){
+    alert(err.message);
+  }
+}
+
+/* ================= DASHBOARD ================= */
+function showDashboard(){
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
+  loadOrders();
+}
+
+/* ================= LOAD ORDERS ================= */
+let firstLoad = true;
+
+function loadOrders(){
+
+  db.collection("orders")
+    .orderBy("createdAt","desc")
+    .onSnapshot(snapshot => {
+
+      const box = document.getElementById("orders");
+      box.innerHTML = "";
+
+      let totalRevenue = 0;
+      let totalOrders = 0;
+
+      snapshot.forEach(doc => {
+
+        const o = doc.data();
+
+        totalRevenue += o.amount || 0;
+        totalOrders++;
+
+        box.innerHTML += `
+          <div class="order">
+
+            <div class="top">
+              <div>
+                <b>📞 ${o.phone || "N/A"}</b><br>
+                <small>${new Date(o.createdAt?.seconds * 1000).toLocaleString()}</small>
+              </div>
+
+              <div>
+                <select onchange="updateStatus('${doc.id}', this.value)">
+                  <option ${o.status==="Pending"?"selected":""}>Pending</option>
+                  <option ${o.status==="Preparing"?"selected":""}>Preparing</option>
+                  <option ${o.status==="Delivered"?"selected":""}>Delivered</option>
+                </select>
+              </div>
+            </div>
+
+            <div><b>Total:</b> KES ${o.amount || 0}</div>
+
+            <div class="items">
+              ${(o.items || []).map(i => `• ${i.name} x ${i.qty}`).join("<br>")}
+            </div>
+
+          </div>
+        `;
+      });
+
+      document.getElementById("ordersCount").innerText = "Orders: " + totalOrders;
+      document.getElementById("revenue").innerText = "Revenue: KES " + totalRevenue;
+
+      // 🔔 SOUND ALERT
+      if(!firstLoad){
+        playSound();
+      }
+
+      firstLoad = false;
+
+    });
+}
+
+/* ================= UPDATE STATUS ================= */
+async function updateStatus(id, status){
+  await db.collection("orders").doc(id).update({
+    status
+  });
+}
+
+/* ================= LOGOUT ================= */
+function logout(){
+  auth.signOut();
+  location.reload();
+}
+
+/* ================= AUTO LOGIN ================= */
+auth.onAuthStateChanged(async user => {
+
+  if(!user) return;
+
+  const doc = await db.collection("users").doc(user.uid).get();
+
+  if(doc.exists && doc.data().role === "admin"){
+    showDashboard();
+  }
+
+});
+
+/* ================= SOUND ================= */
+function playSound(){
+  const audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+  audio.play().catch(()=>{});
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sign Up</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:Poppins;
+  background:#0b0b0c;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  color:#fff;
+}
+
+.box{
+  background:#121214;
+  padding:30px;
+  border-radius:15px;
+  width:300px;
+  text-align:center;
+}
+
+h2{color:#ffb703}
+
+input{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border:none;
+  border-radius:8px;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(135deg,#ffb703,#fb8500);
+  cursor:pointer;
+  font-weight:600;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>Create Account</h2>
+
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <input id="phonenumber" placeholder="Phone Number" ><br><br>
+
+  <button onclick="signup()">Sign Up</button>
+  <p style="margin-top:10px;">
+  Already have an account? 
+  <a href="login.html">Log in here</a>
+</p>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+<script>
+/* =========================
+   FIREBASE INIT
+========================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyA6o6lgDHFRg_gQkio9HIpcnU25DB2Ctu8",
+  authDomain: "sunzurirestaurant.firebaseapp.com",
+  projectId: "sunzurirestaurant",
+  storageBucket: "sunzurirestaurant.appspot.com",
+  messagingSenderId: "1079501361337",
+  appId: "1:1079501361337:web:8385d1c20f8d77ac804b68"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+
+/* =========================
+   SIGNUP FUNCTION (FIXED)
+========================= */
+function signup(){
+
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const phone = document.getElementById("phonenumber").value;
+
+  // ✅ REQUIRED FIELDS
+  if(!email || !password){
+    alert("Please fill all required fields");
+    return;
+  }
+
+  // ✅ PASSWORD LENGTH CHECK
+  if(password.length < 6){
+    alert("Password must be 6 characters or longer");
+    return;
+  }
+
+  // ✅ CREATE USER (ONLY ONCE)
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+
+      const user = userCredential.user;
+
+      // optional storage
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem(user.uid + "_phone", phone || "");
+
+      alert("Account created successfully 🎉");
+
+      // ✅ AUTO LOGIN → REDIRECT
+      window.location.href = "index.html";
+
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact - Sunzuri</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0b0b0c;
+  --card:rgba(18,18,20,0.7);
+  --accent:#ffb703;
+}
+
+body{
+  margin:0;
+  font-family:Poppins;
+  background:var(--bg);
+  color:#fff;
+  overflow-x:hidden;
+}
+
+/* BACKGROUND GLOW */
+body::before{
+  content:"";
+  position:fixed;
+  width:500px;
+  height:500px;
+  background:radial-gradient(circle,#ffb70333,transparent);
+  top:-100px;
+  left:-100px;
+  z-index:-1;
+}
+
+/* HEADER */
+header{
+  text-align:center;
+  padding:60px 20px;
+  animation:fadeIn 1s ease;
+}
+
+header h1{
+  font-size:42px;
+  color:var(--accent);
+}
+
+header p{
+  color:#aaa;
+}
+
+/* GRID */
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  padding: 20px;
+}
+
+/* CARD (GLASS EFFECT) */
+.card{
+  background:var(--card);
+  backdrop-filter:blur(10px);
+  border-radius:18px;
+  padding:25px;
+  transition:0.3s;
+  animation:slideUp 0.8s ease;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 20px 40px rgba(0,0,0,0.5);
+}
+
+/* INFO */
+.info div{
+  margin-bottom:15px;
+  color:#ddd;
+}
+
+/* BUTTONS */
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.actions a{
+  flex:1;
+  text-align:center;
+  padding:12px;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:600;
+  transition:0.3s;
+}
+
+.call{
+  background:#2ecc71;
+  color:#000;
+}
+
+.whatsapp{
+  background:#25D366;
+  color:#000;
+  animation:pulse 2s infinite;
+}
+
+.actions a:hover{
+  transform:scale(1.05);
+}
+
+/* FORM */
+.form-group{
+  position:relative;
+}
+
+input, textarea{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:10px;
+  background:#1a1a1d;
+  color:#fff;
+  outline:none;
+}
+
+label{
+  position:absolute;
+  top:50%;
+  left:15px;
+  transform:translateY(-50%);
+  color:#aaa;
+  pointer-events:none;
+  transition:0.3s;
+}
+
+input:focus + label,
+input:not(:placeholder-shown) + label,
+textarea:focus + label,
+textarea:not(:placeholder-shown) + label{
+  top:-8px;
+  left:10px;
+  font-size:12px;
+  color:var(--accent);
+}
+
+textarea{
+  height:100px;
+  resize:none;
+}
+
+/* BUTTON */
+.btn{
+  margin-top:10px;
+  background:linear-gradient(135deg,#ffb703,#fb8500);
+  border:none;
+  padding:14px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.3s;
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 25px rgba(255,183,3,0.4);
+}
+
+/* FAQ */
+.faq{
+  margin-top:50px;
+}
+
+.faq-item{
+  background:var(--card);
+  backdrop-filter:blur(10px);
+  padding:18px;
+  border-radius:12px;
+  margin-bottom:12px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.faq-item:hover{
+  transform:translateX(5px);
+}
+
+.faq-answer{
+  display:none;
+  color:#aaa;
+  margin-top:8px;
+}
+
+.faq-item.active .faq-answer{
+  display:block;
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+
+@keyframes slideUp{
+  from{transform:translateY(30px);opacity:0}
+  to{transform:translateY(0);opacity:1}
+}
+
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(37,211,102,0.5)}
+  70%{box-shadow:0 0 0 15px rgba(37,211,102,0)}
+  100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}
+}
+
+/* FOOTER */
+footer{
+  text-align:center;
+  margin-top:50px;
+  color:#777;
+}
+
+/* MOBILE */
+@media(max-width:800px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+
+/* =========================
+   GLOBAL MOBILE FIX SYSTEM
+========================= */
+
+img{
+  max-width:100%;
+  height:auto;
+  display:block;
+}
+
+/* Prevent overflow */
+body{
+  overflow-x:hidden;
+}
+
+/* RESPONSIVE GRID FIX */
+.grid{
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) !important;
+  padding: 15px !important;
+  gap: 15px !important;
+}
+
+/* HEADER FIX */
+header{
+  flex-wrap:wrap;
+  gap:10px;
+  padding:15px !important;
+}
+
+/* HERO FIX */
+.hero{
+  flex-direction:column !important;
+  text-align:center;
+  padding:30px !important;
+}
+
+/* BUTTONS MOBILE */
+button{
+  font-size:14px;
+}
+
+/* CARDS MOBILE */
+.card, .menu-item{
+  padding:10px !important;
+}
+
+/* TEXT SCALING */
+h1{font-size:24px}
+h2{font-size:20px}
+h3{font-size:18px}
+
+/* CART / FORMS MOBILE */
+input, select{
+  width:100%;
+  font-size:14px;
+}
+
+/* SMALL SCREENS */
+@media(max-width:480px){
+
+  header nav{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:8px;
+  }
+
+  .hero img{
+    width:100% !important;
+    max-width:280px;
+  }
+
+  .btn{
+    width:100%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Contact Sunzuri</h1>
+  <p>We’d love to hear from you</p>
+</header>
+
+<div class="container">
+
+  <div class="grid">
+
+    <!-- INFO -->
+    <div class="card info">
+      <h3>Get in Touch</h3>
+
+      <div>📍 Kiserian</div>
+      <div>📞 +254 796 953045</div>
+      <div>🕒 7:00 PM – 10:00 PM</div>
+      <div>💳 M-Pesa Till: <strong>3657988</strong></div>
+
+      <div class="actions">
+        <a href="tel:+254796953045" class="call">Call</a>
+        <a href="https://wa.me/254796953045" class="whatsapp">WhatsApp</a>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="card">
+      <h3>Send Message</h3>
+
+      <form>
+        <div class="form-group">
+          <input type="text" required placeholder=" ">
+          <label>Full Name</label>
+        </div>
+
+        <div class="form-group">
+          <input type="tel" required placeholder=" ">
+          <label>Phone Number</label>
+        </div>
+
+        <div class="form-group">
+          <textarea required placeholder=" "></textarea>
+          <label>Your Message</label>
+        </div>
+
+        <button class="btn">Send Message</button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq">
+    <h3>FAQ</h3>
+
+    <div class="faq-item" onclick="toggleFAQ(this)">
+      <strong>How long does delivery take?</strong>
+      <div class="faq-answer">30–60 minutes depending on location.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFAQ(this)">
+      <strong>How do I pay?</strong>
+      <div class="faq-answer">Use M-Pesa Buy Goods Till 3657988.</div>
+    </div>
+
+    <div class="faq-item" onclick="toggleFAQ(this)">
+      <strong>Where do I see my orders?</strong>
+      <div class="faq-answer">Check your Orders page from the menu.</div>
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  © 2026 Sunzuri Restaurant
+</footer>
+
+<script>
+function toggleFAQ(el){
+  el.classList.toggle('active');
+}
+</script>
+
+</body>
+</html>

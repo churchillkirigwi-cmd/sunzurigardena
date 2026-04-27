@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Order History</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+  background:#0b0b0c;
+  color:#fff;
+  font-family:Poppins;
+  padding:30px;
+}
+
+h1{
+  color:#ffb703;
+  margin-bottom:20px;
+}
+
+/* ORDER CARD */
+.order{
+  background:#121214;
+  padding:18px;
+  border-radius:12px;
+  margin-bottom:20px;
+  transition:0.3s;
+}
+
+.order:hover{
+  transform:translateY(-3px);
+}
+
+/* HEADER */
+.order-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.status{
+  padding:4px 10px;
+  border-radius:20px;
+  font-size:12px;
+}
+
+.delivered{background:#2ecc71;}
+.pending{background:#f39c12;}
+
+/* ITEMS */
+.items{
+  margin-top:10px;
+  display:none;
+}
+
+.items.show{
+  display:block;
+}
+
+.item{
+  font-size:14px;
+  color:#aaa;
+}
+
+/* BUTTONS */
+.actions{
+  margin-top:10px;
+}
+
+.btn{
+  background:#ffb703;
+  color:#000;
+  padding:8px 12px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  margin-right:8px;
+  font-size:13px;
+}
+
+.clear-btn{
+  margin-top:20px;
+  width:100%;
+}
+
+/* EMPTY STATE */
+.empty{
+  text-align:center;
+  color:#777;
+  margin-top:50px;
+  font-size:18px;
+}
+
+/* =========================
+   GLOBAL MOBILE FIX SYSTEM
+========================= */
+
+img{
+  max-width:100%;
+  height:auto;
+  display:block;
+}
+
+/* Prevent overflow */
+body{
+  overflow-x:hidden;
+}
+
+/* RESPONSIVE GRID FIX */
+.grid{
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  padding: 20px;
+  gap: 15px !important;
+}
+
+/* HEADER FIX */
+header{
+  flex-wrap:wrap;
+  gap:10px;
+  padding:15px !important;
+}
+
+/* HERO FIX */
+.hero{
+  flex-direction:column !important;
+  text-align:center;
+  padding:30px !important;
+}
+
+/* BUTTONS MOBILE */
+button{
+  font-size:14px;
+}
+
+/* CARDS MOBILE */
+.card, .menu-item{
+  padding:10px !important;
+}
+
+/* TEXT SCALING */
+h1{font-size:24px}
+h2{font-size:20px}
+h3{font-size:18px}
+
+/* CART / FORMS MOBILE */
+input, select{
+  width:100%;
+  font-size:14px;
+}
+
+/* SMALL SCREENS */
+@media(max-width:480px){
+
+  header nav{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:8px;
+  }
+
+  .hero img{
+    width:100% !important;
+    max-width:280px;
+  }
+
+  .btn{
+    width:100%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<h1>Your Orders</h1>
+
+<div id="orders"></div>
+
+<button class="btn clear-btn" onclick="clearOrders()">Clear Orders</button>
+
+<script>
+
+/* =========================
+   AUTH GUARD (REALTIME SAFE)
+========================= */
+firebase.auth().onAuthStateChanged(user => {
+
+  const container = document.getElementById('orders');
+
+  if(!user){
+    container.innerHTML =
+      "<div class='empty'>Please login to view orders</div>";
+    return;
+  }
+
+  loadOrders(user);
+});
+
+/* =========================
+   LIVE ORDERS (REALTIME FIREBASE)
+========================= */
+function loadOrders(user){
+
+  const container = document.getElementById('orders');
+
+  firebase.firestore()
+    .collection("orders")
+    .where("userId", "==", user.uid)
+    .orderBy("date", "desc")
+    .onSnapshot(snapshot => {
+
+      container.innerHTML = "";
+
+      if(snapshot.empty){
+        container.innerHTML = `
+          <div class="empty">🛒 No orders yet</div>
+        `;
+        return;
+      }
+
+      snapshot.forEach(doc => {
+
+        const order = doc.data();
+
+        container.innerHTML += `
+          <div class="order">
+
+            <div class="order-header">
+              <div>
+                <strong>KES ${order.total}</strong><br>
+                <small>${order.date}</small>
+              </div>
+
+              <div class="status ${order.status}">
+                ${order.status}
+              </div>
+            </div>
+
+            <div class="actions">
+              <button onclick="toggleItems('${doc.id}')">View Items</button>
+              <button onclick="reorder('${doc.id}')">Reorder</button>
+            </div>
+
+            <div id="items-${doc.id}" class="items">
+              ${(order.items || []).map(i => `
+                <div class="item">${i.name} x ${i.qty}</div>
+              `).join('')}
+            </div>
+
+          </div>
+        `;
+      });
+    });
+}
+
+/* =========================
+   TOGGLE ITEMS
+========================= */
+function toggleItems(id){
+  const el = document.getElementById("items-" + id);
+  if(el) el.classList.toggle("show");
+}
+
+/* =========================
+   REORDER (FIREBASE CART SYNC)
+========================= */
+async function reorder(orderId){
+
+  const user = firebase.auth().currentUser;
+  if(!user) return;
+
+  const orderDoc = await firebase.firestore()
+    .collection("orders")
+    .doc(orderId)
+    .get();
+
+  if(!orderDoc.exists) return;
+
+  const selected = orderDoc.data();
+
+  const cartRef = firebase.firestore()
+    .collection("users")
+    .doc(user.uid)
+    .collection("cart");
+
+  const snap = await cartRef.get();
+
+  // clear current cart
+  snap.forEach(doc => doc.ref.delete());
+
+  // rebuild cart from order
+  (selected.items || []).forEach(item => {
+    cartRef.add({
+      name: item.name,
+      price: item.price,
+      qty: item.qty
+    });
+  });
+
+  alert("Items added back to cart 🛒");
+}
+
+</script>
+
+</body>
+</html>

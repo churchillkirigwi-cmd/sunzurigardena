@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:Poppins;
+  background:#0b0b0c;
+  color:#fff;
+  padding:40px;
+}
+
+.card{
+  max-width:600px;
+  margin:auto;
+  background:#121214;
+  padding:30px;
+  border-radius:15px;
+}
+
+h1{color:#ffb703}
+
+.info{
+  margin-top:20px;
+  padding:15px;
+  background:#1a1a1d;
+  border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>User Profile</h1>
+
+  <div class="info">
+    <p><strong>Email:</strong> <span id="email"></span></p>
+    <p><strong>Status:</strong> Logged in</p>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="firebase.js"></script>
+
+<script>
+/* =========================
+   GET CURRENT USER FROM FIREBASE
+========================= */
+firebase.auth().onAuthStateChanged(user => {
+
+  if(!user){
+    alert("Not logged in");
+    window.location.href = "login.html";
+    return;
+  }
+
+  // 🔥 EMAIL FROM FIREBASE (NOT LOCAL STORAGE)
+  document.getElementById('email').innerText = user.email;
+
+});
+</script>
+
+</body>
+</html>
