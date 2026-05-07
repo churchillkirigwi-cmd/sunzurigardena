@@ -17,10 +17,22 @@
 body{background:var(--bg);color:#fff;}
 
 header{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:20px 60px;background:rgba(0,0,0,0.6);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding:20px 60px;
+
+  background:rgba(0,0,0,0.9);
+
   border-bottom:1px solid #1f1f22;
-  position:sticky;top:0;
+
+  position:sticky;
+  top:0;
+
+  z-index:99999;
+
+  backdrop-filter:blur(10px);
 }
 
 h1{color:var(--accent)}
@@ -41,8 +53,14 @@ section{padding:40px 60px;}
   border-radius:15px;
   transition:0.3s;
   overflow:hidden;
+
+  position:relative;
+  z-index:1;
 }
-.card:hover{transform:translateY(-6px)}
+.card:hover{
+  transform:translateY(-6px);
+  z-index:1;
+}
 
 .card img{
   width:100%;
@@ -165,21 +183,21 @@ input, select{
     </div>
 
     <div class="card" data-name="1/2 Goat choma" data-price="600">
-      <img src="images/Goat choma.jpg" alt="1/2 Goat choma">
+      <img src="images/goat choma.jpg" alt="1/2 Goat choma">
       <h3>1/2 Goat choma</h3>
       <p class="price">KES 600</p>
       <button onclick="addToCart(this)">Add</button>
     </div>
 
     <div class="card" data-name="1/2 Chicken Choma" data-price="400">
-      <img src="images/Chicken choma.jpg" alt="1/2 Chicken Choma">
+      <img src="images/chicken choma.jpg" alt="1/2 Chicken Choma">
       <h3>1/2 Chicken Choma</h3>
       <p class="price">KES 400</p>
       <button onclick="addToCart(this)">Add</button>
     </div>
 
     <div class="card" data-name="1/2 Kienyeji chicken" data-price="800">
-      <img src="images/Kienyeji chicken.jpg" alt="1/2 Kienyeji chicken">
+      <img src="images/kienyeji chicken.jpg" alt="1/2 Kienyeji chicken">
       <h3>1/2 Kienyeji chicken</h3>
       <p class="price">KES 800</p>
       <button onclick="addToCart(this)">Add</button>
@@ -194,7 +212,7 @@ input, select{
   <div class="grid">
 
     <div class="card" data-name="Chips plain" data-price="100">
-      <img src="images/Chips plain.jpg" alt="Chips plain">
+      <img src="images/chips plain.jpg" alt="Chips plain">
       <h3>Chips plain</h3>
       <p class="price">KES 100</p>
       <button onclick="addToCart(this)">Add</button>
@@ -208,14 +226,14 @@ input, select{
     </div>
 
     <div class="card" data-name="Sausage" data-price="80">
-      <img src="images/Sausage.jpg" alt="Sausage">
+      <img src="images/sausage.jpg" alt="Sausage">
       <h3>Sausage</h3>
       <p class="price">KES 80</p>
       <button onclick="addToCart(this)">Add</button>
     </div>
 
     <div class="card" data-name="Smokie" data-price="50">
-      <img src="images/Smokie.jpg" alt="Smokie">
+      <img src="images/smokie.jpg" alt="Smokie">
       <h3>Smokie</h3>
       <p class="price">KES 50</p>
       <button onclick="addToCart(this)">Add</button>
@@ -230,7 +248,7 @@ input, select{
     </div>
   
     <div class="card" data-name="Mandazi" data-price="20">
-      <img src="images/Mandazi.jpg" alt="Mandazi">
+      <img src="images/mandazi.jpg" alt="Mandazi">
       <h3>Mandazi</h3>
       <p class="price">KES 20</p>
       <button onclick="addToCart(this)">Add</button>
@@ -269,7 +287,7 @@ input, select{
 
     
     <div class="card" data-name="Githeri + minji" data-price="150">
-      <img src="images/Githeri + minji.jpg" alt="Githeri + minji">
+      <img src="images/githeri + minji.jpg" alt="Githeri + minji">
       <h3>Githeri + minji</h3>
       <p class="price">KES 150</p>
       <button onclick="addToCart(this)">Add</button>
@@ -277,7 +295,7 @@ input, select{
 
     
     <div class="card" data-name="Ugali + Kienyeji" data-price="120">
-      <img src="images/Ugali + kienyeji.jpg" alt="Ugali + Kienyeji">
+      <img src="images/ugali + kienyeji.jpg" alt="Ugali + Kienyeji">
       <h3>Ugali + Kienyeji</h3>
       <p class="price">KES 120</p>
       <button onclick="addToCart(this)">Add</button>
@@ -285,7 +303,7 @@ input, select{
 
     
     <div class="card" data-name="Ugali + Goat" data-price="250">
-      <img src="images/Ugali + Goat.jpg" alt="Ugali + Goat">
+      <img src="images/ugali + goat.jpg" alt="Ugali + Goat">
       <h3>Ugali + Goat</h3>
       <p class="price">KES 250</p>
       <button onclick="addToCart(this)">Add</button>
@@ -293,14 +311,14 @@ input, select{
 
     
     <div class="card" data-name="Chemsha beef" data-price="250">
-      <img src="images/Chemsha beef.jpg" alt="Chemsha beef">
+      <img src="images/chemsha beef.jpg" alt="Chemsha beef">
       <h3>Chemsha beef</h3>
       <p class="price">KES 250</p>
       <button onclick="addToCart(this)">Add</button>
     </div>
 
     <div class="card" data-name="Chemsha Goat" data-price="250">
-      <img src="images/Chemsha goat.jpg" alt="Chemsha Goat">
+      <img src="images/chemsha goat.jpg" alt="Chemsha Goat">
       <h3>Chemsha Goat</h3>
       <p class="price">KES 250</p>
       <button onclick="addToCart(this)">Add</button>
@@ -317,14 +335,14 @@ input, select{
   <div class="grid">
 
     <div class="card" data-name="Soup" data-price="20">
-      <img src="images/Soup.jpg" alt="Soup">
+      <img src="images/soup.jpg" alt="Soup">
       <h3>Soup</h3>
       <p class="price">KES 20</p>
       <button onclick="addToCart(this)">Add</button>
     </div>
 
     <div class="card" data-name="Chai Special" data-price="100">
-      <img src="images/Chai special.jpg" alt="African Tea">
+      <img src="images/Chai Special.jpg" alt="African Tea">
       <h3>Chai Special</h3>
       <p class="price">KES 100</p>
       <button onclick="addToCart(this)">Add</button>
@@ -338,7 +356,7 @@ input, select{
     </div>
 
     <div class="card" data-name="Kahawa" data-price="50">
-      <img src="images/Kahawa.jpg" alt="Kahawa">
+      <img src="images/kahawa.jpg" alt="Kahawa">
       <h3>Kahawa</h3>
       <p class="price">KES 50</p>
       <button onclick="addToCart(this)">Add</button>
