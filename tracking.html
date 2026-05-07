@@ -4,95 +4,49 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Track Order - Sunzuri</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
 <style>
-body{
-  margin:0;
-  font-family:Poppins;
-  background:#0b0b0c;
-  color:#fff;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-}
+body{ margin:0; font-family:Poppins; background:#0b0b0c; color:#fff; display:flex; justify-content:center; align-items:center; min-height:100vh; padding:20px; }
+.box{ background:#121214; padding:30px; border-radius:20px; width:90%; max-width:500px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.6); }
+.topbar{ text-align: center; margin-bottom:20px; }
+h2{ color:#ffb703; margin:0; }
+.order{ margin-top:20px; text-align:left; background:#1a1a1d; padding:15px; border-radius:12px; border-left: 3px solid #ffb703; }
+.status{ margin-top:15px; }
+.step{ padding:12px; margin:10px 0; border-radius:10px; background:#222; display:flex; align-items:center; gap:10px; transition:0.3s; opacity: 0.5; }
+.active{ border:2px solid #ffb703; box-shadow:0 0 15px #ffb703; opacity: 1; font-weight: bold; }
+.btn{ margin-top:20px; padding:14px; width:100%; border:none; border-radius:12px; background:linear-gradient(135deg,#ffb703,#fb8500); font-weight:600; cursor:pointer; color:#000; }
+.empty{ margin-top:20px; color:#aaa; font-style: italic; }
 
-.box{
-  background:#121214;
-  padding:30px;
-  border-radius:20px;
-  width:90%;
-  max-width:500px;
-  text-align:center;
-  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+/* CALL ASSISTANCE STYLE */
+.support-link {
+  display: block;
+  margin-top: 25px;
+  color: #777;
+  font-size: 13px;
+  text-decoration: none;
+  transition: 0.3s;
 }
-
-h2{
-  color:#ffb703;
-  margin-bottom:10px;
-}
-
-.order{
-  margin-top:20px;
-  text-align:left;
-  background:#1a1a1d;
-  padding:15px;
-  border-radius:12px;
-}
-
-.status{
-  margin-top:15px;
-}
-
-.step{
-  padding:12px;
-  margin:10px 0;
-  border-radius:10px;
-  background:#222;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  transition:0.3s;
-}
-
-/* 🔥 ACTIVE STATUS */
-.active{
-  border:2px solid #ffb703;
-  box-shadow:0 0 15px #ffb703;
-}
-
-/* ORDER NOW BUTTON */
-.btn{
-  margin-top:20px;
-  padding:14px;
-  width:100%;
-  border:none;
-  border-radius:12px;
-  background:linear-gradient(135deg,#ffb703,#fb8500);
-  font-weight:600;
-  cursor:pointer;
-}
-
-/* EMPTY STATE */
-.empty{
-  margin-top:20px;
-  color:#aaa;
+.support-link b {
+  color: #ffb703;
+  text-decoration: underline;
 }
 </style>
 </head>
-
 <body>
 
 <div class="box">
-  <h2>📦 Track Your Order</h2>
-
+  <div class="topbar">
+    <h2>📦 Track Order</h2>
+  </div>
+  
   <div id="content"></div>
 
+  <!-- Support Link that triggers phone dialer -->
+  <a href="tel:+254796953045" class="support-link">
+    Any assistance call <b>+254 796 953045</b>
+  </a>
 </div>
 
-<!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -107,78 +61,48 @@ const firebaseConfig = {
   appId: "1:1079501361337:web:8385d1c20f8d77ac804b68"
 };
 
-firebase.initializeApp(firebaseConfig);
-
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-/* =========================
-   AUTH CHECK
-========================= */
 firebase.auth().onAuthStateChanged(user => {
-
-  if(!user){
-    alert("Login to view your orders");
-    window.location.href = "login.html";
-    return;
-  }
-
+  if(!user) { window.location.href = "login.html"; return; }
   loadOrders(user.uid);
 });
 
-/* =========================
-   LOAD USER ORDERS
-========================= */
 function loadOrders(uid){
-
-  db.collection("users")
-    .doc(uid)
-    .collection("orders")
+  // Only listens to active orders in the current queue
+  db.collection("orders")
+    .where("userId","==",uid)
     .orderBy("createdAt","desc")
     .onSnapshot(snapshot => {
-
       const content = document.getElementById("content");
-
       if(snapshot.empty){
         content.innerHTML = `
-          <div class="empty">No orders yet</div>
-          <button class="btn" onclick="goMenu()">Order Now</button>
+          <div class="empty">No active orders found.</div>
+          <button class="btn" onclick="goMenu()">🍔 Order Now</button>
         `;
         return;
       }
 
-      const order = snapshot.docs[0].data(); // latest order
-
+      const order = snapshot.docs[0].data();
       content.innerHTML = `
         <div class="order">
           <b>Amount:</b> KES ${order.amount}<br>
-          <b>Phone:</b> ${order.phone}<br>
           <b>Receipt:</b> ${order.receipt || "Pending"}
         </div>
-
         <div class="status">
-          <div class="step ${order.status==="pending"?"active":""}">
-            ⏳ Pending
-          </div>
-
-          <div class="step ${order.status==="preparing"?"active":""}">
-            👨‍🍳 Preparing
-          </div>
-
-          <div class="step ${order.status==="delivered"?"active":""}">
-            🚚 Delivered
-          </div>
+          <div class="step ${order.status==="pending"?"active":""}">⏳ Pending</div>
+          <div class="step ${order.status==="preparing"?"active":""}">👨‍🍳 Preparing</div>
+          <div class="step ${order.status==="delivered"?"active":""}">🚚 Delivered</div>
         </div>
+        <p style="font-size:12px; color:#555; margin-top:15px;">Active order updates appear here in real-time.</p>
       `;
+    }, err => {
+      console.error("Firestore error:", err);
     });
 }
 
-/* =========================
-   NAVIGATION
-========================= */
-function goMenu(){
-  window.location.href = "menu.html";
-}
+function goMenu(){ window.location.href = "menu.html"; }
 </script>
-
 </body>
 </html>
