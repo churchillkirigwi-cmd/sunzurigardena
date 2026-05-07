@@ -3,335 +3,260 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cart - Sunzuri</title>
+<title>Your Cart - Sunzuri</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --bg:#0b0b0c;
-  --card:#121214;
-  --accent:#ffb703;
-  --accent2:#fb8500;
-}
-
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins}
-body{
-  background:var(--bg);
-  color:#fff;padding:30px
-}
-
-h1{
-  color:var(--accent);
-  margin-bottom:20px
-}
-
-/* CART ITEM */
-.item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:var(--card);
-  padding:15px;
-  border-radius:14px;
-  margin-bottom:15px;
-  transition:0.2s;
-}
-
-.item:hover{
-  transform:scale(1.01);
-}
-
-.controls button{
-  padding:6px 12px;
-  margin:0 5px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  font-weight:600;
-}
-
-/* TOTAL */
-.total{
-  margin-top:20px;
-  font-size:22px;
-  font-weight:700;
-  color:var(--accent);
-}
-
-/* BUTTONS */
-.btn{
-  margin-top:20px;
-  padding:12px;
-  width:100%;
-  border:none;
-  border-radius:10px;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  cursor:pointer;
-  font-weight:600;
-}
-
-/* CLEAR BUTTON */
-.clear{
-  background:#333;
-  color:#fff;
-  margin-top:10px;
-}
-
-/* EMPTY STATE */
-.empty{
-  text-align:center;
-  padding:50px;
-  color:#aaa;
-}
-
-.empty span{
-  font-size:50px;
-  display:block;
-  margin-bottom:10px;
-}
-
-/* =========================
-   GLOBAL MOBILE FIX SYSTEM
-========================= */
-
-img{
-  max-width:100%;
-  height:auto;
-  display:block;
-}
-
-/* Prevent overflow */
-body{
-  overflow-x:hidden;
-}
-
-/* RESPONSIVE GRID FIX */
-.grid{
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #0b0b0c;
+  color: #fff;
   padding: 20px;
-  gap: 15px !important;
 }
 
-/* HEADER FIX */
-header{
-  flex-wrap:wrap;
-  gap:10px;
-  padding:15px !important;
+h1 {
+  color: #ffb703;
+  text-align: center;
+  margin-bottom: 30px;
 }
 
-/* HERO FIX */
-.hero{
-  flex-direction:column !important;
-  text-align:center;
-  padding:30px !important;
+.cart-container {
+  max-width: 600px;
+  margin: auto;
 }
 
-/* BUTTONS MOBILE */
-button{
-  font-size:14px;
+.cart-item {
+  background: #121214;
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-/* CARDS MOBILE */
-.card, .menu-item{
-  padding:10px !important;
+.details b {
+  display: block;
+  font-size: 18px;
+  color: #ffb703;
 }
 
-/* TEXT SCALING */
-h1{font-size:24px}
-h2{font-size:20px}
-h3{font-size:18px}
-
-/* CART / FORMS MOBILE */
-input, select{
-  width:100%;
-  font-size:14px;
+.details span {
+  font-size: 14px;
+  color: #aaa;
 }
 
-/* SMALL SCREENS */
-@media(max-width:480px){
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
 
-  header nav{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:8px;
-  }
+.btn-qty {
+  background: #1a1a1d;
+  color: #ffb703;
+  border: 1px solid #ffb703;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s;
+}
 
-  .hero img{
-    width:100% !important;
-    max-width:280px;
-  }
+.btn-qty:hover {
+  background: #ffb703;
+  color: #000;
+}
 
-  .btn{
-    width:100%;
-  }
+.qty-display {
+  font-weight: 600;
+  font-size: 16px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.checkout-box {
+  margin-top: 30px;
+  text-align: center;
+  border-top: 1px solid #222;
+  padding-top: 20px;
+}
+
+.total-price {
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.pay-btn {
+  background: linear-gradient(135deg, #ffb703, #fb8500);
+  color: #000;
+  padding: 15px 40px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+}
+
+.empty-msg {
+  text-align: center;
+  color: #777;
+  margin-top: 50px;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: #ffb703;
+  text-decoration: none;
+  font-weight: 600;
 }
 </style>
 </head>
 
 <body>
 
-<h1>Your Cart 🛒</h1>
+<div class="cart-container">
+  <a href="menu.html" class="back-link">← Back to Menu</a>
+  
+  <h1>🛒 Your Cart</h1>
 
-<div id="cart-items"></div>
+  <div id="cartItems">
+    <!-- Items will be injected here -->
+  </div>
 
-<div class="total" id="total">Total: KES 0</div>
+  <div class="checkout-box" id="checkoutBox" style="display:none;">
+    <div class="total-price">Total: <b id="grandTotal">KES 0</b></div>
+    <button class="pay-btn" onclick="goToCheckout()">Proceed to Checkout</button>
+  </div>
+</div>
 
-<a href="checkout.html">
-  <button class="btn">Proceed to Checkout</button>
-</a>
-
-<button class="btn clear" onclick="clearCart()">Clear Cart</button>
-
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
-<script src="firebase.js"></script>
+<!-- FIREBASE SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
 <script>
 /* =========================
-   FIREBASE CORE
+   FIREBASE CONFIG
 ========================= */
-function getUser(){
-  return firebase.auth().currentUser;
+const firebaseConfig = {
+  apiKey: "AIzaSyA6o6lgDHFRg_gQkio9HIpcnU25DB2Ctu8",
+  authDomain: "sunzurirestaurant.firebaseapp.com",
+  projectId: "sunzurirestaurant",
+  storageBucket: "sunzurirestaurant.appspot.com",
+  messagingSenderId: "1079501361337",
+  appId: "1:1079501361337:web:8385d1c20f8d77ac804b68"
+};
+
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
 }
 
-function getUserId(){
-  return firebase.auth().currentUser?.uid;
-}
+const auth = firebase.auth();
+const db = firebase.firestore();
 
 /* =========================
-   AUTH GUARD
+   AUTH CHECK
 ========================= */
-firebase.auth().onAuthStateChanged(user => {
+auth.onAuthStateChanged(user => {
   if(!user){
-    alert("Please login first");
+    // If not logged in, send to login page
     window.location.href = "login.html";
     return;
   }
-
-  renderCart(); // load cart after auth is ready
+  // Load this specific user's cart
+  loadCart(user.uid);
 });
 
 /* =========================
-   LOAD CART (FIREBASE)
+   LOAD CART ITEMS (REAL-TIME)
 ========================= */
-async function getCart(){
+function loadCart(uid){
+  // Listen for real-time changes in the user's cart sub-collection[cite: 3]
+  db.collection("users").doc(uid).collection("cart")
+    .onSnapshot(snapshot => {
+      const container = document.getElementById("cartItems");
+      const checkoutBox = document.getElementById("checkoutBox");
+      
+      if(snapshot.empty){
+        container.innerHTML = `<div class="empty-msg">Your cart is empty. Time to go back to the menu!</div>`;
+        checkoutBox.style.display = "none";
+        return;
+      }
 
-  const userId = getUserId();
-  if(!userId) return [];
+      checkoutBox.style.display = "block";
+      container.innerHTML = "";
+      let total = 0;
 
-  const snapshot = await firebase.firestore()
-    .collection("users")
-    .doc(userId)
-    .collection("cart")
-    .get();
+      snapshot.forEach(doc => {
+        const item = doc.data();
+        const itemTotal = (item.price || 0) * (item.qty || 0);
+        total += itemTotal;
 
-  let cart = [];
+        container.innerHTML += `
+          <div class="cart-item">
+            <div class="details">
+              <b>${item.name}</b>
+              <span>KES ${item.price}</span>
+            </div>
+            
+            <div class="controls">
+              <button class="btn-qty" onclick="changeQty('${doc.id}', -1)">-</button>
+              <span class="qty-display">${item.qty}</span>
+              <button class="btn-qty" onclick="changeQty('${doc.id}', 1)">+</button>
+            </div>
+          </div>
+        `;
+      });
 
-  snapshot.forEach(doc=>{
-    cart.push(doc.data());
-  });
-
-  return cart;
+      document.getElementById("grandTotal").innerText = "KES " + total;
+    });
 }
 
 /* =========================
-   RENDER CART (UNCHANGED UI LOGIC)
+   CHANGE QUANTITY LOGIC (+ / -)
 ========================= */
-async function renderCart(){
+async function changeQty(docId, delta){
+  const user = auth.currentUser;
+  if(!user) return;
 
-  const container = document.getElementById('cart-items');
-  const totalEl = document.getElementById('total');
+  const itemRef = db.collection("users").doc(user.uid).collection("cart").doc(docId);
+  
+  try {
+    const doc = await itemRef.get();
+    if(!doc.exists) return;
 
-  let cart = await getCart();
+    const currentQty = doc.data().qty || 0;
+    const newQty = currentQty + delta;
 
-  container.innerHTML = '';
-
-  if(cart.length === 0){
-    container.innerHTML = `
-      <div class="empty">
-        🛒 Your cart is empty
-      </div>
-    `;
-    totalEl.innerText = "Total: KES 0";
-    return;
+    if(newQty <= 0){
+      // If quantity hits 0, delete the item from the database[cite: 3]
+      await itemRef.delete();
+    } else {
+      // Otherwise, update the count in Firestore[cite: 3]
+      await itemRef.update({ qty: newQty });
+    }
+  } catch (error) {
+    console.error("Error updating cart:", error);
   }
-
-  let total = 0;
-
-  cart.forEach((item,index)=>{
-    total += item.price * item.qty;
-
-    container.innerHTML += `
-      <div class="item">
-        <div>
-          <strong>${item.name}</strong><br>
-          KES ${item.price} × ${item.qty}
-        </div>
-
-        <div class="controls">
-          <button onclick="changeQty('${item.name}',1)">+</button>
-          <button onclick="changeQty('${item.name}',-1)">-</button>
-        </div>
-      </div>
-    `;
-  });
-
-  totalEl.innerText = "Total: KES " + total;
 }
 
 /* =========================
-   CHANGE QUANTITY (FIREBASE)
+   NAVIGATION
 ========================= */
-async function changeQty(name, delta){
-
-  const userId = getUserId();
-  if(!userId) return;
-
-  const ref = firebase.firestore()
-    .collection("users")
-    .doc(userId)
-    .collection("cart")
-    .doc(name);
-
-  const doc = await ref.get();
-
-  if(!doc.exists) return;
-
-  let qty = doc.data().qty + delta;
-
-  if(qty <= 0){
-    await ref.delete();
-  } else {
-    await ref.update({ qty });
-  }
-
-  renderCart();
-}
-
-/* =========================
-   CLEAR CART (FIREBASE)
-========================= */
-async function clearCart(){
-
-  const userId = getUserId();
-  if(!userId) return;
-
-  const snapshot = await firebase.firestore()
-    .collection("users")
-    .doc(userId)
-    .collection("cart")
-    .get();
-
-  snapshot.forEach(doc=>{
-    doc.ref.delete();
-  });
-
-  renderCart();
+function goToCheckout(){
+  window.location.href = "checkout.html";
 }
 </script>
 
